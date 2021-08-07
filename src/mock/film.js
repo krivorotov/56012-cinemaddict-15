@@ -1,5 +1,4 @@
-import dayjs from 'dayjs';
-import {getRandomInteger, shuffle} from '../utils.js';
+import {getRandomInteger, shuffle, generateDate} from '../utils.js';
 import {FILMS, EMOTIONS, MAX_SENTENCES, MAX_COMMENTS, COMMENT_AUTHORS, COMMENT_TEXTS} from '../const.js';
 
 let filmId = 1;
@@ -17,13 +16,6 @@ const generateDescription = () => {
   return description;
 };
 
-const generateDate = () => {
-  const maxDaysGap = 7;
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-
-  return dayjs().add(daysGap, 'day').toDate();
-};
-
 const generateComments = () => {
 
   const generateComment = () => ({
@@ -35,7 +27,7 @@ const generateComments = () => {
   });
 
   const randomCommentsCount = getRandomInteger(0, MAX_COMMENTS);
-  const comments = new Array(randomCommentsCount).fill().map(generateComment);
+  const comments = new Array(randomCommentsCount).fill(null).map(generateComment);
 
   return comments;
 };

@@ -8,23 +8,9 @@ import {createFooterStatisticsTemplate} from './view/footer-statistics.js';
 import {getGenres, getComments, createGenresTemplate, createCommentsTemplate, createFilmDetailsTemplate} from './view/film-details.js';
 import {generateFilm} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
+import {FILM_COUNT_PER_STEP, FilmCardCount, RenderPosition} from './const.js';
 
-const FILM_COUNT_PER_STEP = 5;
-
-const FilmCardCount = {
-  ALL: 20,
-  RATED: 2,
-  COMMENTED: 2,
-};
-
-const RenderPosition = {
-  BEFORE_BEGIN: 'beforebegin',
-  AFTER_BEGIN: 'afterbegin',
-  BEFORE_END: 'beforeend',
-  AFTER_END: 'afterend',
-};
-
-const films = new Array(FilmCardCount.ALL).fill().map(generateFilm);
+const films = new Array(FilmCardCount.ALL).fill(null).map(generateFilm);
 const filters = generateFilter(films);
 
 const render = (container, template, place) => {

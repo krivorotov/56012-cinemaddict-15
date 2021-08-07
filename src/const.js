@@ -1,6 +1,21 @@
 const MAX_SENTENCES = 5;
 const MAX_COMMENTS = 5;
 
+const FILM_COUNT_PER_STEP = 5;
+
+const FilmCardCount = {
+  ALL: 20,
+  RATED: 2,
+  COMMENTED: 2,
+};
+
+const RenderPosition = {
+  BEFORE_BEGIN: 'beforebegin',
+  AFTER_BEGIN: 'afterbegin',
+  BEFORE_END: 'beforeend',
+  AFTER_END: 'afterend',
+};
+
 const FILMS = [
   {
     title: 'Made For Each Other',
@@ -107,4 +122,4 @@ const COMMENT_TEXTS = ['Interesting setting and a good cast', 'Booooooooooring',
 
 const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
-export {FILMS, EMOTIONS, MAX_SENTENCES, MAX_COMMENTS, COMMENT_AUTHORS, COMMENT_TEXTS};
+export {FILMS, EMOTIONS, MAX_SENTENCES, MAX_COMMENTS, COMMENT_AUTHORS, COMMENT_TEXTS, FILM_COUNT_PER_STEP, FilmCardCount, RenderPosition};
