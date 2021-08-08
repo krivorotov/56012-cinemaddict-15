@@ -26,4 +26,26 @@ const generateDate = () => {
   return dayjs().add(daysGap, 'day').toDate();
 };
 
-export {getRandomInteger, shuffle, generateDate};
+const showFullDate = (date) => dayjs(date).format('D MMMM YYYY');
+
+//Функция для добавления окончания "s", если существительное во множественном числе
+const isMultiple = (arr) => arr.length > 1 ? 's' : '';
+
+const RenderPosition = {
+  BEFOREEND: 'beforeend',
+};
+
+const render = (container, element, place) => {
+  if (place === RenderPosition.BEFOREEND) {
+    container.append(element);
+  }
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export {getRandomInteger, shuffle, generateDate, showFullDate, isMultiple, RenderPosition, render, createElement};

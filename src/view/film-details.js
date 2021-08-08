@@ -1,34 +1,4 @@
-import dayjs from 'dayjs';
-
-const showFullDate = (date) => dayjs(date).format('D MMMM YYYY');
-
-const isFewGenres = (arr) => arr.length > 1 ? 'Genres' : 'Genre';
-
-let genresArray;
-let commentsArray;
-
-const getGenres = () => genresArray;
-const getComments = () => commentsArray;
-
-const createGenresTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
-
-const createCommentsTemplate = (comment) => {
-  const {author, text, date, emotion} = comment;
-
-  return `<li class="film-details__comment">
-    <span class="film-details__comment-emoji">
-      <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
-    </span>
-    <div>
-      <p class="film-details__comment-text">${text}</p>
-      <p class="film-details__comment-info">
-        <span class="film-details__comment-author">${author}</span>
-        <span class="film-details__comment-day">${dayjs(date).format('YYYY/MM/DD hh:mm')}</span>
-        <button class="film-details__comment-delete">Delete</button>
-      </p>
-    </div>
-  </li>`;
-};
+import {createElement, showFullDate, isMultiple} from '../utils.js';
 
 const createFilmDetailsTemplate = (film) => {
   const {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, runtime, genre, description} = film.filmInfo;
@@ -39,9 +9,6 @@ const createFilmDetailsTemplate = (film) => {
   const watchlistClassName = isWatchlist ? 'film-details__control-button--active' : '';
   const alreadyWatchedClassName = isAlreadyWatched ? 'film-details__control-button--active' : '';
   const favoriteClassName = isFavorite ? 'film-details__control-button--active' : '';
-
-  genresArray = genre;
-  commentsArray = comments;
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -94,7 +61,7 @@ const createFilmDetailsTemplate = (film) => {
                 <td class="film-details__cell">${releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
-                <td class="film-details__term">${isFewGenres(genre)}</td>
+                <td class="film-details__term">Genre${isMultiple(genre)}</td>
                 <td class="film-details__cell"></td>
               </tr>
             </table>
@@ -151,4 +118,25 @@ const createFilmDetailsTemplate = (film) => {
   </section>`;
 };
 
-export {getGenres, getComments, createGenresTemplate, createCommentsTemplate, createFilmDetailsTemplate};
+export default class FilmDetails {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
