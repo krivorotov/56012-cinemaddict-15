@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import {createElement, RenderPosition, render} from '../utils.js';
+import {renderFilmDetails} from './film-details.js';
 
 const showYear = (date) => dayjs(date).format('YYYY');
 
@@ -31,4 +33,36 @@ const createFilmCardTemplate = (film) => {
   </article>`;
 };
 
-export {createFilmCardTemplate};
+export default class FilmCard {
+  constructor(film) {
+    this._film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+const renderFilmCard = (filmListElement, film) => {
+  const filmComponent = new FilmCard(film);
+
+  filmComponent.getElement().addEventListener('click', () => renderFilmDetails(film));
+
+  render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
+export {renderFilmCard};

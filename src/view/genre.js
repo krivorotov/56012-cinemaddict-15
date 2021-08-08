@@ -1,15 +1,15 @@
 import {createElement} from '../utils.js';
 
-const createFooterStatisticsTemplate = (films) => `<p>${films.length} movies inside</p>`;
+const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
 
-export default class FooterStatistics {
-  constructor(films) {
-    this._films = films;
+export default class Genre {
+  constructor(genre) {
+    this._genre = genre;
     this._element = null;
   }
 
   getTemplate() {
-    return createFooterStatisticsTemplate(this._films);
+    return createGenreTemplate(this._genre);
   }
 
   getElement() {
