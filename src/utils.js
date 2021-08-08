@@ -29,7 +29,7 @@ const generateDate = () => {
 const showFullDate = (date) => dayjs(date).format('D MMMM YYYY');
 
 //Функция для добавления окончания "s", если существительное во множественном числе
-const isMultiple = (arr) => arr.length > 1 ? 's' : '';
+const isMultiple = (data) => data.length > 1 ? 's' : '';
 
 const RenderPosition = {
   BEFOREEND: 'beforeend',
