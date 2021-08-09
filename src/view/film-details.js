@@ -1,6 +1,7 @@
 import Genre from './genre.js';
 import Comment from './comment.js';
 import {createElement, showFullDate, isMultiple, RenderPosition, render} from '../utils.js';
+import {onEscKeyDown} from './film-card.js';
 
 const body = document.body;
 
@@ -145,6 +146,11 @@ export default class FilmDetails {
   }
 }
 
+const onPopupExit = () => {
+  body.querySelector('.film-details').remove();
+  body.classList.remove('hide-overflow');
+};
+
 const renderFilmDetails = (film) => {
   const filmDetailsComponent = new FilmDetails(film);
 
@@ -167,9 +173,9 @@ const renderFilmDetails = (film) => {
   body.classList.add('hide-overflow');
 
   filmDetailsComponent.getElement().querySelector('.film-details__close-btn').addEventListener('click', () => {
-    filmDetailsComponent.getElement().remove();
-    body.classList.remove('hide-overflow');
+    onPopupExit();
+    document.removeEventListener('keydown', onEscKeyDown);
   });
 };
 
-export {renderFilmDetails};
+export {renderFilmDetails, onPopupExit};

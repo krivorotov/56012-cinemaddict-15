@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import {createElement, RenderPosition, render} from '../utils.js';
-import {renderFilmDetails} from './film-details.js';
+import {createElement, RenderPosition, render, isEscEvent} from '../utils.js';
+import {renderFilmDetails, onPopupExit} from './film-details.js';
 
 const showYear = (date) => dayjs(date).format('YYYY');
 
@@ -57,12 +57,23 @@ export default class FilmCard {
   }
 }
 
+const onEscKeyDown = (evt) => {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    onPopupExit();
+    document.removeEventListener('keydown', onEscKeyDown);
+  }
+};
+
 const renderFilmCard = (filmListElement, film) => {
   const filmComponent = new FilmCard(film);
 
-  filmComponent.getElement().addEventListener('click', () => renderFilmDetails(film));
+  filmComponent.getElement().addEventListener('click', () => {
+    renderFilmDetails(film);
+    document.addEventListener('keydown', onEscKeyDown);
+  });
 
   render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-export {renderFilmCard};
+export {renderFilmCard, onEscKeyDown};
