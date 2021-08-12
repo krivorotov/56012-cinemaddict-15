@@ -9,7 +9,7 @@ import NoFilmsView from './view/no-films.js';
 import {generateFilm} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
 import {FILM_COUNT_PER_STEP, FilmCardCount} from './const.js';
-import {RenderPosition, render} from './utils.js';
+import {RenderPosition, render, remove} from './utils/render.js';
 import {renderFilmCard} from './view/film-card.js';
 
 const films = new Array(FilmCardCount.ALL).fill(null).map(generateFilm);
@@ -19,18 +19,18 @@ const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 const footerStatistics = document.querySelector('.footer__statistics');
 
-render(headerElement, new HeaderProfileView().getElement(), RenderPosition.BEFOREEND);
-render(mainElement, new MenuView(filters).getElement(), RenderPosition.BEFOREEND);
-render(mainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
-render(footerStatistics, new FooterStatisticsView(films).getElement(), RenderPosition.BEFOREEND);
+render(headerElement, new HeaderProfileView(), RenderPosition.BEFOREEND);
+render(mainElement, new MenuView(filters), RenderPosition.BEFOREEND);
+render(mainElement, new SortView(), RenderPosition.BEFOREEND);
+render(footerStatistics, new FooterStatisticsView(films), RenderPosition.BEFOREEND);
 
 const filmsListComponent = new FilmsListView();
 const noFilmsComponent = new NoFilmsView();
 
 if (films.length === 0) {
-  render(mainElement, noFilmsComponent.getElement(), RenderPosition.BEFOREEND);
+  render(mainElement, noFilmsComponent, RenderPosition.BEFOREEND);
 } else {
-  render(mainElement, filmsListComponent.getElement(), RenderPosition.BEFOREEND);
+  render(mainElement, filmsListComponent, RenderPosition.BEFOREEND);
 
   const filmsList = filmsListComponent.getElement().querySelector('.films-list');
   const filmsContainers = filmsListComponent.getElement().querySelectorAll('.films-list__container');
@@ -52,18 +52,15 @@ if (films.length === 0) {
 
     const showMoreButtonComponent = new ShowMoreButtonView();
 
-    render(filmsList, showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+    render(filmsList, showMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    showMoreButtonComponent.getElement().addEventListener('click', (evt) => {
-      evt.preventDefault();
-
+    showMoreButtonComponent.setClickHandler(() => {
       films.slice(renderedFilmCount, renderedFilmCount + FILM_COUNT_PER_STEP).forEach((film) => renderFilmCard(filmsContainers[0], film));
 
       renderedFilmCount += FILM_COUNT_PER_STEP;
 
       if (renderedFilmCount >= films.length) {
-        showMoreButtonComponent.getElement().remove();
-        showMoreButtonComponent.removeElement();
+        remove(showMoreButtonComponent);
       }
     });
   }
