@@ -1,4 +1,4 @@
-import {getRandomInteger, shuffle, generateDate} from '../utils.js';
+import {getRandomInteger, shuffle, generateDate} from '../utils/common.js';
 import {FILMS, EMOTIONS, MAX_SENTENCES, MAX_COMMENTS, COMMENT_AUTHORS, COMMENT_TEXTS} from '../const.js';
 
 let filmId = 1;

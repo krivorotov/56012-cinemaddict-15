@@ -19,6 +19,8 @@ const shuffle = (array) => {
   return array;
 };
 
+const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
 const generateDate = () => {
   const maxDaysGap = 7;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
@@ -31,23 +33,4 @@ const showFullDate = (date) => dayjs(date).format('D MMMM YYYY');
 //Функция для добавления окончания "s", если существительное во множественном числе
 const isMultiple = (data) => data.length > 1 ? 's' : '';
 
-const RenderPosition = {
-  BEFOREEND: 'beforeend',
-};
-
-const render = (container, element, place) => {
-  if (place === RenderPosition.BEFOREEND) {
-    container.append(element);
-  }
-};
-
-const createElement = (template) => {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
-
-export {getRandomInteger, shuffle, generateDate, showFullDate, isMultiple, RenderPosition, render, createElement, isEscEvent};
+export {getRandomInteger, shuffle, isEscEvent, generateDate, showFullDate, isMultiple};
