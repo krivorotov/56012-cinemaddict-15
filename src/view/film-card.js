@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-view.js';
 import dayjs from 'dayjs';
 import {RenderPosition, render} from '../utils/render.js';
 import {isEscEvent} from '../utils/common.js';

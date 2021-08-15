@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-view.js';
 
 const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
 

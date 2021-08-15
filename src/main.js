@@ -9,7 +9,7 @@ import NoFilmsView from './view/no-films.js';
 import {generateFilm} from './mock/film.js';
 import {generateFilter} from './mock/filter.js';
 import {FILM_COUNT_PER_STEP, FilmCardCount} from './const.js';
-import {RenderPosition, render, remove} from './utils/render.js';
+import {RenderPosition, render, removeElement} from './utils/render.js';
 import {renderFilmCard} from './view/film-card.js';
 
 const films = new Array(FilmCardCount.ALL).fill(null).map(generateFilm);
@@ -60,7 +60,7 @@ if (films.length === 0) {
       renderedFilmCount += FILM_COUNT_PER_STEP;
 
       if (renderedFilmCount >= films.length) {
-        remove(showMoreButtonComponent);
+        removeElement(showMoreButtonComponent);
       }
     });
   }

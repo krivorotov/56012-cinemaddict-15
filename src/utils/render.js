@@ -1,4 +1,4 @@
-import Abstract from '../view/abstract.js';
+import Abstract from '../view/abstract-view.js';
 
 const RenderPosition = {
   BEFOREEND: 'beforeend',
@@ -25,7 +25,7 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-const remove = (component) => {
+const removeElement = (component) => {
   if (!(component instanceof Abstract)) {
     throw new Error('Can remove only components');
   }
@@ -34,4 +34,4 @@ const remove = (component) => {
   component.removeElement();
 };
 
-export {RenderPosition, render, createElement, remove};
+export {RenderPosition, render, createElement, removeElement};

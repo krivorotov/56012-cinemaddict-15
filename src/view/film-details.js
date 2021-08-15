@@ -1,8 +1,8 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-view.js';
 import Genre from './genre.js';
 import Comment from './comment.js';
 import {RenderPosition, render} from '../utils/render.js';
-import {showFullDate, isMultiple} from '../utils/film.js';
+import {showFullDate, isMultiple} from '../utils/common.js';
 import {onEscKeyDown} from './film-card.js';
 
 const body = document.body;
