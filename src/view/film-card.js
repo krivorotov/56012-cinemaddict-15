@@ -1,8 +1,5 @@
 import AbstractView from './abstract-view.js';
 import dayjs from 'dayjs';
-import {RenderPosition, render} from '../utils/render.js';
-import {isEscEvent} from '../utils/common.js';
-import {renderFilmDetails, onPopupExit} from './film-details.js';
 
 const showYear = (date) => dayjs(date).format('YYYY');
 
@@ -56,24 +53,3 @@ export default class FilmCard extends AbstractView {
     this.getElement().addEventListener('click', this._clickHandler);
   }
 }
-
-const onEscKeyDown = (evt) => {
-  if (isEscEvent(evt)) {
-    evt.preventDefault();
-    onPopupExit();
-    document.removeEventListener('keydown', onEscKeyDown);
-  }
-};
-
-const renderFilmCard = (filmListElement, film) => {
-  const filmComponent = new FilmCard(film);
-
-  filmComponent.setClickHandler(() => {
-    renderFilmDetails(film);
-    document.addEventListener('keydown', onEscKeyDown);
-  });
-
-  render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
-};
-
-export {renderFilmCard, onEscKeyDown};

@@ -1,11 +1,5 @@
 import AbstractView from './abstract-view.js';
-import Genre from './genre.js';
-import Comment from './comment.js';
-import {RenderPosition, render} from '../utils/render.js';
 import {showFullDate, isMultiple} from '../utils/common.js';
-import {onEscKeyDown} from './film-card.js';
-
-const body = document.body;
 
 const createFilmDetailsTemplate = (film) => {
   const {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, runtime, genre, description} = film.filmInfo;
@@ -146,37 +140,3 @@ export default class FilmDetails extends AbstractView {
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._clickHandler);
   }
 }
-
-const onPopupExit = () => {
-  body.querySelector('.film-details').remove();
-  body.classList.remove('hide-overflow');
-};
-
-const renderFilmDetails = (film) => {
-  const filmDetailsComponent = new FilmDetails(film);
-
-  render(body, filmDetailsComponent.getElement(), RenderPosition.BEFOREEND);
-
-  const filmTableCells = filmDetailsComponent.getElement().querySelectorAll('.film-details__cell');
-  const commentsList = filmDetailsComponent.getElement().querySelector('.film-details__comments-list');
-
-  const {genre} = film.filmInfo;
-  const {comments} = film;
-
-  for (let i = 0; i < genre.length; i++) {
-    render(filmTableCells[filmTableCells.length - 1], new Genre(genre[i]).getElement(), RenderPosition.BEFOREEND);
-  }
-
-  for (let i = 0; i < comments.length; i++) {
-    render(commentsList, new Comment(comments[i]).getElement(), RenderPosition.BEFOREEND);
-  }
-
-  body.classList.add('hide-overflow');
-
-  filmDetailsComponent.setClickHandler(() => {
-    onPopupExit();
-    document.removeEventListener('keydown', onEscKeyDown);
-  });
-};
-
-export {renderFilmDetails, onPopupExit};
