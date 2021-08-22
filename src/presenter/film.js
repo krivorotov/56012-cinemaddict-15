@@ -33,6 +33,7 @@ export default class Film {
     this._filmDetailsView = new FilmDetailsView(film);
 
     this._filmView.setClickHandler(this._openFilmDetails);
+    this._filmDetailsView.setCloseButtonClickHandler(this._onDetailsPopupClose);
 
     this._filmView.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filmView.setWatchedClickHandler(this._handleWatchedClick);
@@ -97,10 +98,6 @@ export default class Film {
 
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
-
-    this._filmDetailsView.setClickHandler(() => {
-      this._onDetailsPopupClose();
-    });
   }
 
   _onEscKeyDown(evt) {

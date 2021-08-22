@@ -150,7 +150,7 @@ export default class FilmDetails extends AbstractView {
     this._callback.favoriteDetailsClick();
   }
 
-  setClickHandler(callback) {
+  setCloseButtonClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._clickHandler);
   }
