@@ -44,7 +44,7 @@ export default class Film {
     this._filmDetailsView.setFavoriteDetailsClickHandler(this._handleFavoriteClick);
 
     if (prevFilmView === null || prevFilmDetailsView === null) {
-      render(this._filmsListContainer, this._filmView.getElement(), RenderPosition.BEFOREEND);
+      render(this._filmsListContainer, this._filmView, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -53,7 +53,7 @@ export default class Film {
     }
 
     if (this._filmDetailsContainer.contains(prevFilmDetailsView.getElement())) {
-      replaceElement(this._filmDetailsView, prevFilmView);
+      replaceElement(this._filmDetailsView, prevFilmDetailsView);
     }
 
     removeElement(this._filmDetailsView);
