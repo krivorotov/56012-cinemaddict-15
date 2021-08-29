@@ -1,11 +1,6 @@
 import AbstractView from './abstract-view.js';
-import Genre from './genre.js';
-import Comment from './comment.js';
-import {RenderPosition, render} from '../utils/render.js';
 import {showFullDate, isMultiple} from '../utils/common.js';
-import {onEscKeyDown} from './film-card.js';
-
-const body = document.body;
+import dayjs from 'dayjs';
 
 const createFilmDetailsTemplate = (film) => {
   const {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, runtime, genre, description} = film.filmInfo;
@@ -16,6 +11,23 @@ const createFilmDetailsTemplate = (film) => {
   const watchlistClassName = isWatchlist ? 'film-details__control-button--active' : '';
   const alreadyWatchedClassName = isAlreadyWatched ? 'film-details__control-button--active' : '';
   const favoriteClassName = isFavorite ? 'film-details__control-button--active' : '';
+
+  const renderDetailsGenre = (genres) => genres.map((el) => `<span class="film-details__genre">${el}</span>`).join('');
+
+  const renderDetailsComments = (commentsList) => commentsList.map(({author, text, commentDate, emotion}) =>
+    `<li class="film-details__comment">
+      <span class="film-details__comment-emoji">
+        <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
+      </span>
+      <div>
+        <p class="film-details__comment-text">${text}</p>
+        <p class="film-details__comment-info">
+          <span class="film-details__comment-author">${author}</span>
+          <span class="film-details__comment-day">${dayjs(commentDate).format('YYYY/MM/DD hh:mm')}</span>
+          <button class="film-details__comment-delete">Delete</button>
+        </p>
+      </div>
+    </li>`);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -69,7 +81,7 @@ const createFilmDetailsTemplate = (film) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genre${isMultiple(genre)}</td>
-                <td class="film-details__cell"></td>
+                <td class="film-details__cell">${renderDetailsGenre(genre)}</td>
               </tr>
             </table>
 
@@ -79,7 +91,7 @@ const createFilmDetailsTemplate = (film) => {
 
         <section class="film-details__controls">
           <button type="button" class="film-details__control-button film-details__control-button--watchlist ${watchlistClassName}" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched ${alreadyWatchedClassName}" id="watched" name="watched">Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watched ${alreadyWatchedClassName}" id="watched" name="watched">Already watched</button>
           <button type="button" class="film-details__control-button film-details__control-button--favorite ${favoriteClassName}" id="favorite" name="favorite">Add to favorites</button>
         </section>
       </div>
@@ -88,7 +100,7 @@ const createFilmDetailsTemplate = (film) => {
         <section class="film-details__comments-wrap">
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
-          <ul class="film-details__comments-list"></ul>
+          <ul class="film-details__comments-list">${renderDetailsComments(comments)}</ul>
 
           <div class="film-details__new-comment">
             <div class="film-details__add-emoji-label"></div>
@@ -129,54 +141,53 @@ export default class FilmDetails extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
-    this._clickHandler = this._clickHandler.bind(this);
+    this._clickCloseButtonHandler = this._clickCloseButtonHandler.bind(this);
+    this._watchlistDetailsClickHandler = this._watchlistDetailsClickHandler.bind(this);
+    this._watchedDetailsClickHandler = this._watchedDetailsClickHandler.bind(this);
+    this._favoriteDetailsClickHandler = this._favoriteDetailsClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
   }
 
-  _clickHandler(evt) {
+  _clickCloseButtonHandler(evt) {
     evt.preventDefault();
     this._callback.click();
   }
 
-  setClickHandler(callback) {
+  _watchlistDetailsClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchlistDetailsClick();
+  }
+
+  _watchedDetailsClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedDetailsClick();
+  }
+
+  _favoriteDetailsClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteDetailsClick();
+  }
+
+  setCloseButtonClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._clickHandler);
+    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._clickCloseButtonHandler);
+  }
+
+  setWatchlistDetailsClickHandler(callback) {
+    this._callback.watchlistDetailsClick = callback;
+    this.getElement().querySelector('.film-details__control-button--watchlist').addEventListener('click', this._watchlistDetailsClickHandler);
+  }
+
+  setWatchedDetailsClickHandler(callback) {
+    this._callback.watchedDetailsClick = callback;
+    this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._watchedDetailsClickHandler);
+  }
+
+  setFavoriteDetailsClickHandler(callback) {
+    this._callback.favoriteDetailsClick = callback;
+    this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._favoriteDetailsClickHandler);
   }
 }
-
-const onPopupExit = () => {
-  body.querySelector('.film-details').remove();
-  body.classList.remove('hide-overflow');
-};
-
-const renderFilmDetails = (film) => {
-  const filmDetailsComponent = new FilmDetails(film);
-
-  render(body, filmDetailsComponent.getElement(), RenderPosition.BEFOREEND);
-
-  const filmTableCells = filmDetailsComponent.getElement().querySelectorAll('.film-details__cell');
-  const commentsList = filmDetailsComponent.getElement().querySelector('.film-details__comments-list');
-
-  const {genre} = film.filmInfo;
-  const {comments} = film;
-
-  for (let i = 0; i < genre.length; i++) {
-    render(filmTableCells[filmTableCells.length - 1], new Genre(genre[i]).getElement(), RenderPosition.BEFOREEND);
-  }
-
-  for (let i = 0; i < comments.length; i++) {
-    render(commentsList, new Comment(comments[i]).getElement(), RenderPosition.BEFOREEND);
-  }
-
-  body.classList.add('hide-overflow');
-
-  filmDetailsComponent.setClickHandler(() => {
-    onPopupExit();
-    document.removeEventListener('keydown', onEscKeyDown);
-  });
-};
-
-export {renderFilmDetails, onPopupExit};

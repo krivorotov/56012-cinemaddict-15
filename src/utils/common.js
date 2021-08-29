@@ -19,6 +19,20 @@ const shuffle = (array) => {
   return array;
 };
 
+const updateItem = (items, update) => {
+  const index = items.findIndex((item) => item.id === update.id);
+
+  if (index === -1) {
+    return items;
+  }
+
+  return [
+    ...items.slice(0, index),
+    update,
+    ...items.slice(index + 1),
+  ];
+};
+
 const isEscEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
 const generateDate = () => {
@@ -33,4 +47,4 @@ const showFullDate = (date) => dayjs(date).format('D MMMM YYYY');
 //Функция для добавления окончания "s", если существительное во множественном числе
 const isMultiple = (data) => data.length > 1 ? 's' : '';
 
-export {getRandomInteger, shuffle, isEscEvent, generateDate, showFullDate, isMultiple};
+export {getRandomInteger, shuffle, updateItem, isEscEvent, generateDate, showFullDate, isMultiple};

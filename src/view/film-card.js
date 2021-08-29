@@ -1,8 +1,5 @@
 import AbstractView from './abstract-view.js';
 import dayjs from 'dayjs';
-import {RenderPosition, render} from '../utils/render.js';
-import {isEscEvent} from '../utils/common.js';
-import {renderFilmDetails, onPopupExit} from './film-details.js';
 
 const showYear = (date) => dayjs(date).format('YYYY');
 
@@ -40,6 +37,9 @@ export default class FilmCard extends AbstractView {
     super();
     this._film = film;
     this._clickHandler = this._clickHandler.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -51,29 +51,38 @@ export default class FilmCard extends AbstractView {
     this._callback.click();
   }
 
+  _watchlistClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchlistClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
   setClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().addEventListener('click', this._clickHandler);
+    this.getElement().querySelectorAll('.film-card__poster, .film-card__title, .film-card__comments').forEach((element) => element.addEventListener('click', this._clickHandler));
+  }
+
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this._watchlistClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this._watchedClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--favorite').addEventListener('click', this._favoriteClickHandler);
   }
 }
-
-const onEscKeyDown = (evt) => {
-  if (isEscEvent(evt)) {
-    evt.preventDefault();
-    onPopupExit();
-    document.removeEventListener('keydown', onEscKeyDown);
-  }
-};
-
-const renderFilmCard = (filmListElement, film) => {
-  const filmComponent = new FilmCard(film);
-
-  filmComponent.setClickHandler(() => {
-    renderFilmDetails(film);
-    document.addEventListener('keydown', onEscKeyDown);
-  });
-
-  render(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
-};
-
-export {renderFilmCard, onEscKeyDown};
