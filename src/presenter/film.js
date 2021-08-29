@@ -2,8 +2,6 @@ import FilmCardView from '../view/film-card.js';
 import FilmDetailsView from '../view/film-details.js';
 import {RenderPosition, render, removeElement, replaceElement} from '../utils/render.js';
 import {isEscEvent} from '../utils/common.js';
-import GenreView from '../view/genre.js';
-import CommentView from '../view/comment.js';
 
 export default class Film {
   constructor(filmsListContainer, changeData, changeMode) {
@@ -55,8 +53,6 @@ export default class Film {
     if (this._filmDetailsContainer.contains(prevFilmDetailsView.getElement())) {
       replaceElement(this._filmDetailsView, prevFilmDetailsView);
     }
-
-    removeElement(this._filmDetailsView);
   }
 
   destroy() {
@@ -82,20 +78,6 @@ export default class Film {
   _renderFilmDetails() {
     render(this._filmDetailsContainer, this._filmDetailsView.getElement(), RenderPosition.BEFOREEND);
 
-    const filmTableCells = this._filmDetailsView.getElement().querySelectorAll('.film-details__cell');
-    const commentsList = this._filmDetailsView.getElement().querySelector('.film-details__comments-list');
-
-    const {genre} = this._film.filmInfo;
-    const {comments} = this._film;
-
-    for (let i = 0; i < genre.length; i++) {
-      render(filmTableCells[filmTableCells.length - 1], new GenreView(genre[i]).getElement(), RenderPosition.BEFOREEND);
-    }
-
-    for (let i = 0; i < comments.length; i++) {
-      render(commentsList, new CommentView(comments[i]).getElement(), RenderPosition.BEFOREEND);
-    }
-
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
   }
@@ -108,14 +90,14 @@ export default class Film {
   }
 
   _handleWatchlistClick() {
-    this._changeData(Object.assign({}, this._film, { userDetails: { isWatchlist: !this._film.isWatchlist } }));
+    this._changeData(Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isWatchlist: !this._film.userDetails.isWatchlist } }));
   }
 
   _handleWatchedClick() {
-    this._changeData(Object.assign({}, this._film, { userDetails: { isAlreadyWatched: !this._film.isAlreadyWatched } }));
+    this._changeData(Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isAlreadyWatched: !this._film.userDetails.isAlreadyWatched } }));
   }
 
   _handleFavoriteClick() {
-    this._changeData(Object.assign({}, this._film, { userDetails: { isFavorite: !this._film.isFavorite } }));
+    this._changeData(Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isFavorite: !this._film.userDetails.isFavorite } }));
   }
 }
