@@ -115,4 +115,10 @@ const COMMENT_TEXTS = ['Interesting setting and a good cast', 'Booooooooooring',
 
 const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
-export {FILMS, EMOTIONS, MAX_SENTENCES, MAX_COMMENTS, COMMENT_AUTHORS, COMMENT_TEXTS, FILM_COUNT_PER_STEP, FilmCardCount};
+const SortType = {
+  DEFAULT: 'default',
+  DATE: 'date',
+  RATING: 'rating',
+};
+
+export {FILMS, EMOTIONS, MAX_SENTENCES, MAX_COMMENTS, COMMENT_AUTHORS, COMMENT_TEXTS, FILM_COUNT_PER_STEP, FilmCardCount, SortType};

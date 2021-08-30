@@ -47,4 +47,8 @@ const showFullDate = (date) => dayjs(date).format('D MMMM YYYY');
 //Функция для добавления окончания "s", если существительное во множественном числе
 const isMultiple = (data) => data.length > 1 ? 's' : '';
 
-export {getRandomInteger, shuffle, updateItem, isEscEvent, generateDate, showFullDate, isMultiple};
+const sortByDate = (filmA, filmB) => dayjs(filmB.filmInfo.release.date).diff(dayjs(filmA.filmInfo.release.date));
+
+const sortByRating = (filmA, filmB) => filmB.filmInfo.totalRating - filmA.filmInfo.totalRating;
+
+export {getRandomInteger, shuffle, updateItem, isEscEvent, generateDate, showFullDate, isMultiple, sortByDate, sortByRating};
