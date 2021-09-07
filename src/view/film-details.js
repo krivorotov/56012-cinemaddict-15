@@ -1,10 +1,10 @@
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
 import {showFullDate, isMultiple} from '../utils/common.js';
 import dayjs from 'dayjs';
 
 const createFilmDetailsTemplate = (film) => {
   const {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, runtime, genre, description} = film.filmInfo;
-  const {comments} = film;
+  const {comments, isEmotion, newCommentEmotionSource = null} = film;
   const {date, releaseCountry} = film.filmInfo.release;
   const {isWatchlist, isAlreadyWatched, isFavorite} = film.userDetails;
 
@@ -103,7 +103,7 @@ const createFilmDetailsTemplate = (film) => {
           <ul class="film-details__comments-list">${renderDetailsComments(comments)}</ul>
 
           <div class="film-details__new-comment">
-            <div class="film-details__add-emoji-label"></div>
+            <div class="film-details__add-emoji-label">${isEmotion ? `<img src=${newCommentEmotionSource} width="55" height="55" alt="emoji-smile">` : ''}</div>
 
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -137,18 +137,60 @@ const createFilmDetailsTemplate = (film) => {
   </section>`;
 };
 
-export default class FilmDetails extends AbstractView {
+export default class FilmDetails extends SmartView {
   constructor(film) {
     super();
-    this._film = film;
+    this._film = FilmDetails.addNewCommentEmotion(film);
+
+    this._emotionChangeHandler = this._emotionChangeHandler.bind(this);
+    this._commentInputHandler = this._commentInputHandler.bind(this);
     this._clickCloseButtonHandler = this._clickCloseButtonHandler.bind(this);
     this._watchlistDetailsClickHandler = this._watchlistDetailsClickHandler.bind(this);
     this._watchedDetailsClickHandler = this._watchedDetailsClickHandler.bind(this);
     this._favoriteDetailsClickHandler = this._favoriteDetailsClickHandler.bind(this);
+
+    this._setInnerHandlers();
+  }
+
+  reset(film) {
+    this.updateData(FilmDetails.restoreChanges(film));
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setCloseButtonClickHandler(this._callback.watchlistDetailsClick);
+    this.setWatchlistDetailsClickHandler(this._callback.watchlistDetailsClick);
+    this.setWatchedDetailsClickHandler(this._callback.watchedDetailsClick);
+    this.setFavoriteDetailsClickHandler(this._callback.favoriteDetailsClick);
+
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelectorAll('.film-details__emoji-label').forEach((emotion) => emotion.addEventListener('click', this._emotionChangeHandler));
+    this.getElement().querySelector('.film-details__comment-input').addEventListener('input', this._commentInputHandler);
+  }
+
+  _emotionChangeHandler(evt) {
+    if (this._film.newCommentEmotionSource === evt.target.src) {
+      return;
+    }
+
+    this.updateData({newCommentEmotionSource: evt.target.src, isEmotion: true, scroll: this.getElement().scrollTop});
+    this.getElement().scrollTop = this._film.scroll;
+
+    if(!this._film.commentInput) {
+      return;
+    }
+
+    this.getElement().querySelector('.film-details__comment-input').value = this._film.commentInput;
+  }
+
+  _commentInputHandler(evt) {
+    this.updateData({commentInput: evt.target.value}, true);
   }
 
   _clickCloseButtonHandler(evt) {
@@ -189,5 +231,20 @@ export default class FilmDetails extends AbstractView {
   setFavoriteDetailsClickHandler(callback) {
     this._callback.favoriteDetailsClick = callback;
     this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._favoriteDetailsClickHandler);
+  }
+
+  static restoreChanges(data) {
+    return Object.assign({}, data, {isEmotion: false, newCommentEmotionSource: null, commentInput: null});
+  }
+
+  static addNewCommentEmotion(data) {
+    return Object.assign(
+      {},
+      data,
+      {
+        isEmotion: false,
+        newCommentEmotionSource: null,
+      },
+    );
   }
 }
