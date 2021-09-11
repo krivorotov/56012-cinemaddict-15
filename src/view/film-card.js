@@ -1,7 +1,5 @@
 import AbstractView from './abstract-view.js';
-import dayjs from 'dayjs';
-
-const showYear = (date) => dayjs(date).format('YYYY');
+import {renderYear, renderRuntime} from '../utils/date-format.js';
 
 const createFilmCardTemplate = (film) => {
   const {title, totalRating, genre, runtime, poster, description} = film.filmInfo;
@@ -17,8 +15,8 @@ const createFilmCardTemplate = (film) => {
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${totalRating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${showYear(date)}</span>
-      <span class="film-card__duration">${runtime}</span>
+      <span class="film-card__year">${renderYear(date)}</span>
+      <span class="film-card__duration">${renderRuntime(runtime)}</span>
       <span class="film-card__genre">${genre.join(', ')}</span>
     </p>
     <img src="./images/posters/${poster}" alt="" class="film-card__poster">

@@ -1,6 +1,6 @@
 import SmartView from './smart-view.js';
-import {showFullDate, isMultiple} from '../utils/common.js';
-import dayjs from 'dayjs';
+import {isMultiple} from '../utils/common.js';
+import {renderRuntime, renderCommentDate, renderFullDate} from '../utils/date-format.js';
 
 const createFilmDetailsTemplate = (film) => {
   const {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, runtime, genre, description} = film.filmInfo;
@@ -23,7 +23,7 @@ const createFilmDetailsTemplate = (film) => {
         <p class="film-details__comment-text">${text}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${dayjs(commentDate).format('YYYY/MM/DD hh:mm')}</span>
+          <span class="film-details__comment-day">${renderCommentDate(commentDate)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -69,11 +69,11 @@ const createFilmDetailsTemplate = (film) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${showFullDate(date)}</td>
+                <td class="film-details__cell">${renderFullDate(date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${runtime}</td>
+                <td class="film-details__cell">${renderRuntime(runtime)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
