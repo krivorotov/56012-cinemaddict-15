@@ -27,7 +27,7 @@ const createFilmDetailsTemplate = (film) => {
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
-    </li>`);
+    </li>`).join('');
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -111,22 +111,22 @@ const createFilmDetailsTemplate = (film) => {
 
             <div class="film-details__emoji-list">
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-              <label class="film-details__emoji-label" for="emoji-smile">
+              <label class="film-details__emoji-label" for="emoji-smile" data-src="./images/emoji/smile.png">
                 <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
               </label>
 
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-              <label class="film-details__emoji-label" for="emoji-sleeping">
+              <label class="film-details__emoji-label" for="emoji-sleeping" data-src="./images/emoji/sleeping.png">
                 <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
               </label>
 
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-              <label class="film-details__emoji-label" for="emoji-puke">
+              <label class="film-details__emoji-label" for="emoji-puke" data-src="./images/emoji/puke.png">
                 <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
               </label>
 
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-              <label class="film-details__emoji-label" for="emoji-angry">
+              <label class="film-details__emoji-label" for="emoji-angry" data-src="./images/emoji/angry.png">
                 <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
               </label>
             </div>
@@ -162,7 +162,6 @@ export default class FilmDetails extends SmartView {
     this.setWatchlistDetailsClickHandler(this._callback.watchlistDetailsClick);
     this.setWatchedDetailsClickHandler(this._callback.watchedDetailsClick);
     this.setFavoriteDetailsClickHandler(this._callback.favoriteDetailsClick);
-
   }
 
   getTemplate() {
@@ -179,7 +178,7 @@ export default class FilmDetails extends SmartView {
       return;
     }
 
-    this.updateData({newCommentEmotionSource: evt.target.src, isEmotion: true, scroll: this.getElement().scrollTop});
+    this.updateData({newCommentEmotionSource: evt.target.src || evt.target.dataset.src, isEmotion: true, scroll: this.getElement().scrollTop});
     this.getElement().scrollTop = this._film.scroll;
 
     if(!this._film.commentInput) {
