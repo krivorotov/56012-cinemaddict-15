@@ -85,6 +85,7 @@ export default class Film {
   _onEscKeyDown(evt) {
     if (isEscEvent(evt)) {
       evt.preventDefault();
+      this._filmDetailsView.reset(this._film);
       this._onDetailsPopupClose();
     }
   }
