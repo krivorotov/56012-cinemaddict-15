@@ -2,6 +2,7 @@ import FilmCardView from '../view/film-card.js';
 import FilmDetailsView from '../view/film-details.js';
 import {RenderPosition, render, removeElement, replaceElement} from '../utils/render.js';
 import {isEscEvent} from '../utils/common.js';
+import {UserAction, UpdateType} from '../const.js';
 
 export default class Film {
   constructor(filmsListContainer, changeData, changeMode) {
@@ -91,14 +92,14 @@ export default class Film {
   }
 
   _handleWatchlistClick() {
-    this._changeData(Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isWatchlist: !this._film.userDetails.isWatchlist } }));
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isWatchlist: !this._film.userDetails.isWatchlist } }));
   }
 
   _handleWatchedClick() {
-    this._changeData(Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isAlreadyWatched: !this._film.userDetails.isAlreadyWatched } }));
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isAlreadyWatched: !this._film.userDetails.isAlreadyWatched } }));
   }
 
   _handleFavoriteClick() {
-    this._changeData(Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isFavorite: !this._film.userDetails.isFavorite } }));
+    this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isFavorite: !this._film.userDetails.isFavorite } }));
   }
 }
