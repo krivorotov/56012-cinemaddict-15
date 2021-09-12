@@ -42,8 +42,6 @@ const generateDate = () => {
   return dayjs().add(daysGap, 'day').toDate();
 };
 
-const showFullDate = (date) => dayjs(date).format('D MMMM YYYY');
-
 //Функция для добавления окончания "s", если существительное во множественном числе
 const isMultiple = (data) => data.length > 1 ? 's' : '';
 
@@ -51,4 +49,4 @@ const sortByDate = (filmA, filmB) => dayjs(filmB.filmInfo.release.date).diff(day
 
 const sortByRating = (filmA, filmB) => filmB.filmInfo.totalRating - filmA.filmInfo.totalRating;
 
-export {getRandomInteger, shuffle, updateItem, isEscEvent, generateDate, showFullDate, isMultiple, sortByDate, sortByRating};
+export {getRandomInteger, shuffle, updateItem, isEscEvent, generateDate, isMultiple, sortByDate, sortByRating};
