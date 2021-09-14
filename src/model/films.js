@@ -29,8 +29,4 @@ export default class Films extends AbstractObserver {
 
     this._notify(updateType, update);
   }
-
-  //addComment(updateType, update) {}
-
-  //deleteComment(updateType, update) {}
 }

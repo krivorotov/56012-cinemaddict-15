@@ -1,8 +1,9 @@
 import FilmCardView from '../view/film-card.js';
 import FilmDetailsView from '../view/film-details.js';
 import {RenderPosition, render, removeElement, replaceElement} from '../utils/render.js';
-import {isEscEvent} from '../utils/common.js';
+import {isEscEvent, generateDate} from '../utils/common.js';
 import {UserAction, UpdateType} from '../const.js';
+import {nanoid} from 'nanoid';
 
 export default class Film {
   constructor(filmsListContainer, changeData, changeMode) {
@@ -19,6 +20,8 @@ export default class Film {
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._handleAddCommentClick = this._handleAddCommentClick.bind(this);
+    this._handleDeleteCommentClick = this._handleDeleteCommentClick.bind(this);
   }
 
   init(film) {
@@ -41,6 +44,9 @@ export default class Film {
     this._filmDetailsView.setWatchlistDetailsClickHandler(this._handleWatchlistClick);
     this._filmDetailsView.setWatchedDetailsClickHandler(this._handleWatchedClick);
     this._filmDetailsView.setFavoriteDetailsClickHandler(this._handleFavoriteClick);
+
+    this._filmDetailsView.setAddCommentHandler(this._handleAddCommentClick);
+    this._filmDetailsView.setDeleteCommentHanlder(this._handleDeleteCommentClick);
 
     if (prevFilmView === null || prevFilmDetailsView === null) {
       render(this._filmsListContainer, this._filmView, RenderPosition.BEFOREEND);
@@ -101,5 +107,26 @@ export default class Film {
 
   _handleFavoriteClick() {
     this._changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, Object.assign({}, this._film, { userDetails: { ...this._film.userDetails, isFavorite: !this._film.userDetails.isFavorite } }));
+  }
+
+  _handleAddCommentClick(text, emotion) {
+    const newComment = {
+      id: nanoid(),
+      author: 'Unknown user',
+      text: text,
+      date: generateDate(),
+      emotion: emotion,
+    };
+
+    this._film.comments.push(newComment);
+    this._changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, this._film);
+    this._filmDetailsView.reset(this._film);
+  }
+
+  _handleDeleteCommentClick(id) {
+    const commentIndex = this._film.comments.find((comment) => comment.id === id);
+    this._film.comments.splice(commentIndex, 1);
+
+    this._changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, this._film);
   }
 }

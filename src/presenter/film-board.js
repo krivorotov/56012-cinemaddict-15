@@ -1,6 +1,4 @@
 import FilmsListView from '../view/films-list.js';
-import FooterStatisticsView from '../view/footer-statistics.js';
-import HeaderProfileView from '../view/header-profile.js';
 import MenuView from '../view/menu.js';
 import NoFilmsView from '../view/no-films.js';
 import ShowMoreButtonView from '../view/show-more-button.js';
@@ -11,11 +9,9 @@ import {FILM_COUNT_PER_STEP, SortType, UpdateType, UserAction} from '../const.js
 import FilmPresenter from '../presenter/film.js';
 
 export default class FilmBoard {
-  constructor(main, header, footer, filmsModel) {
-    this._filmsModel = filmsModel;
+  constructor(main, filmsModel) {
     this._mainContainer = main;
-    this._headerContainer = header;
-    this._footerContainer = footer;
+    this._filmsModel = filmsModel;
 
     this._renderedFilmCount = FILM_COUNT_PER_STEP;
     this._currentSortType = SortType.DEFAULT;
@@ -25,7 +21,6 @@ export default class FilmBoard {
     this._sortView = null;
     this._showMoreButtonView = null;
 
-    this._headerProfileView = new HeaderProfileView();
     this._filmsListView = new FilmsListView();
     this._noFilmsView = new NoFilmsView();
 
@@ -64,18 +59,18 @@ export default class FilmBoard {
         this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.ADD_COMMENT:
-        this._filmsModel.addComment(updateType, update);
+        this._filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this._filmsModel.deleteComment(updateType, update);
+        this._filmsModel.updateFilm(updateType, update);
         break;
     }
   }
 
-  _handleModelEvent(updateType, data) {
+  _handleModelEvent(updateType, update) {
     switch(updateType) {
       case UpdateType.PATCH:
-        this._filmPresenterMap.get(data.id).init(data);
+        this._filmPresenterMap.get(update.id).init(update);
         break;
       case UpdateType.MINOR:
         this._clearBoard();
@@ -88,10 +83,6 @@ export default class FilmBoard {
     }
   }
 
-  _renderHeaderProfile() {
-    render(this._headerContainer, this._headerProfileView, RenderPosition.BEFOREEND);
-  }
-
   _renderMenu() {
     render(this._mainContainer, new MenuView(this._filters), RenderPosition.BEFOREEND);
   }
@@ -102,7 +93,7 @@ export default class FilmBoard {
     }
 
     this._currentSortType = sortType;
-    this._renderSort();
+
     this._clearBoard({resetRenderedTaskCount: true});
     this._renderBoard();
   }
@@ -116,10 +107,6 @@ export default class FilmBoard {
     this._sortView.setSortTypeChangeHandler(this._handleSortTypeChange);
 
     render(this._mainContainer, this._sortView, RenderPosition.BEFOREEND);
-  }
-
-  _renderFooterStatistics() {
-    render(this._footerContainer, new FooterStatisticsView(this._filmsModel.getFilms()), RenderPosition.BEFOREEND);
   }
 
   _renderFilm(film) {
@@ -167,24 +154,6 @@ export default class FilmBoard {
     render(filmsList, this._showMoreButtonView, RenderPosition.BEFOREEND);
   }
 
-  _renderFilmsList() {
-    const filmCount = this._getFilms().length;
-    const films = this._getFilms().slice(0, Math.min(filmCount, FILM_COUNT_PER_STEP));
-
-    this._renderFilms(films);
-
-    if (filmCount > FILM_COUNT_PER_STEP) {
-      this._renderShowMoreButton();
-    }
-  }
-
-  _clearFilmsList() {
-    this._filmPresenterMap.forEach((presenter) => presenter.destroy());
-    this._filmPresenterMap.clear();
-    this._renderedFilmCount = FILM_COUNT_PER_STEP;
-    removeElement(this._showMoreButtonView);
-  }
-
   _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
     const filmCount = this._getFilms().length;
 
@@ -215,11 +184,9 @@ export default class FilmBoard {
       return;
     }
 
-    this._renderHeaderProfile();
     this._renderMenu();
     this._renderSort();
     this._renderFilmsContainer();
-    this._renderFooterStatistics();
 
     this._renderFilms(films.slice(0, Math.min(filmCount, this._renderedFilmCount)));
 
